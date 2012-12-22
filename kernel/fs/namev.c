@@ -25,11 +25,15 @@
 int
 lookup(vnode_t *dir, const char *name, size_t len, vnode_t **result)
 {
-      /*  NOT_YET_IMPLEMENTED("VFS: lookup");
-        return 0;*/
-    
 
+       /* NOT_YET_IMPLEMENTED("VFS: lookup");
+        return 0;*/
+    int tmp;
+    if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) != -ENOENT)
+        return tmp;
     
+        return -ENOTDIR;   
+
 }
 
 
@@ -57,6 +61,20 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
 {
       /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
         return 0;*/
+
+    char *tmp;
+    tmp=strtok(pathname,"/");
+    int ret_val=lookup(vfs_root_vn, tmp, strlen(tmp), res_vnode);
+    if(ret_val<0)
+        return ret_val;
+
+    
+
+    while((tmp=strtok(NULL,"/"))!=NULL)
+    {
+        vnode_t temp_res_vnode=**res_vnode;
+        ret_val=lookup(temp_res_vnode, tmp, strlen(tmp), res_vnode);
+    }    
 
 
 
