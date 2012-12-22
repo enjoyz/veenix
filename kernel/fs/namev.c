@@ -52,8 +52,8 @@ int
 dir_namev(const char *pathname, size_t *namelen, const char **name,
           vnode_t *base, vnode_t **res_vnode)
 {
-        NOT_YET_IMPLEMENTED("VFS: dir_namev");
-        return 0;
+      /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
+        return 0;*/
 }
 
 /* This returns in res_vnode the vnode requested by the other parameters.
