@@ -138,7 +138,7 @@ open_namev(const char *pathname, int flag, vnode_t **res_vnode, vnode_t *base)
         if(ret_val < 0 && flag == O_CREAT){
             vnode_t *temp_res_vnode = kmalloc(sizeof(vnode_t));
             temp_res_vnode = *res_vnode;
-            creat_ret=res_vnode->vn_ops->create(temp_res_vnode, Name,strlen(Name), res_vnode);
+            creat_ret=(*res_vnode)->vn_ops->create(temp_res_vnode, Name,strlen(Name), res_vnode);
         }
         else if(ret_val > 0) 
         {

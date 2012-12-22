@@ -448,7 +448,7 @@ DMA_SR_ACTIVE	kernel/drivers/disk/dma.c	22;"	d	file:
 DMA_SR_ERR	kernel/drivers/disk/dma.c	23;"	d	file:
 DMA_SR_INTR	kernel/drivers/disk/dma.c	24;"	d	file:
 DMA_STATUS	kernel/drivers/disk/dma.c	18;"	d	file:
-DRIVERS	Config.mk	/^     DRIVERS=0$/;"	m
+DRIVERS	Config.mk	/^     DRIVERS=1$/;"	m
 DSDT_SIGNATURE	kernel/main/acpi.c	14;"	d	file:
 DTF_1_CONFEXP	kernel/include/api/elf.h	750;"	d
 DTF_1_CONFEXP	user/lib/ld-weenix/elf.h	750;"	d
@@ -4542,7 +4542,7 @@ VER_NEED_NONE	kernel/include/api/elf.h	836;"	d
 VER_NEED_NONE	user/lib/ld-weenix/elf.h	836;"	d
 VER_NEED_NUM	kernel/include/api/elf.h	838;"	d
 VER_NEED_NUM	user/lib/ld-weenix/elf.h	838;"	d
-VFS	Config.mk	/^         VFS=0$/;"	m
+VFS	Config.mk	/^         VFS=1$/;"	m
 VFS_ROOTFS_DEV	kernel/include/config.h	46;"	d
 VFS_ROOTFS_DEV	user/include/weenix/config.h	46;"	d
 VFS_ROOTFS_TYPE	kernel/include/config.h	50;"	d

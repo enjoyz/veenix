@@ -6,7 +6,7 @@ COMPILE_CONFIG_DEFS	Config.mk	/^        COMPILE_CONFIG_DEFS=" NTERMS NDISKS DBG 
 DBG	Config.mk	/^        DBG=all$/;"	m
 DISK_BLOCKS	Config.mk	/^        DISK_BLOCKS=1024 # For fsmaker$/;"	m
 DISK_INODES	Config.mk	/^        DISK_INODES=240 # for fsmaker$/;"	m
-DRIVERS	Config.mk	/^     DRIVERS=0$/;"	m
+DRIVERS	Config.mk	/^     DRIVERS=1$/;"	m
 DYNAMIC	Config.mk	/^     DYNAMIC=0$/;"	m
 GDB_PORT	Config.mk	/^		GDB_PORT=1234$/;"	m
 GDB_TERM	Config.mk	/^        GDB_TERM=xterm$/;"	m
@@ -19,7 +19,7 @@ NTERMS	Config.mk	/^        NTERMS=3$/;"	m
 S5FS	Config.mk	/^        S5FS=0$/;"	m
 SHADOWD	Config.mk	/^         SHADOWD=0 # shadow page cleanup$/;"	m
 UPREEMPT	Config.mk	/^        UPREEMPT=0 # userland preemption$/;"	m
-VFS	Config.mk	/^         VFS=0$/;"	m
+VFS	Config.mk	/^         VFS=1$/;"	m
 VM	Config.mk	/^          VM=0$/;"	m
 !_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
