@@ -25,8 +25,11 @@
 int
 lookup(vnode_t *dir, const char *name, size_t len, vnode_t **result)
 {
-        NOT_YET_IMPLEMENTED("VFS: lookup");
-        return 0;
+      /*  NOT_YET_IMPLEMENTED("VFS: lookup");
+        return 0;*/
+    
+
+    
 }
 
 
@@ -54,6 +57,10 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
 {
       /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
         return 0;*/
+
+
+
+
 }
 
 /* This returns in res_vnode the vnode requested by the other parameters.
