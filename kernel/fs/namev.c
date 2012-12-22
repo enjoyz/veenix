@@ -62,7 +62,7 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
     /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
         return 0;*/
     /**** STRING MANIPULATIONS ******/
-    char *pathname2 = (char*)malloc(sizeof(pathname));
+    char *pathname2 = (char*)kmalloc(sizeof(pathname));
     strcpy(pathname2,pathname);
     char *tmp;
     tmp = pathname2;
