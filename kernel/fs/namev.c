@@ -29,10 +29,10 @@ lookup(vnode_t *dir, const char *name, size_t len, vnode_t **result)
        /* NOT_YET_IMPLEMENTED("VFS: lookup");
         return 0;*/
     int tmp;
-    if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) != -ENOENT)
+    if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) >= 0)
         return tmp;
+    return -ENOTDIR;
     
-        return -ENOTDIR;   
 
 }
 
@@ -59,26 +59,56 @@ int
 dir_namev(const char *pathname, size_t *namelen, const char **name,
           vnode_t *base, vnode_t **res_vnode)
 {
-      /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
+    /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
         return 0;*/
-
+    /**** STRING MANIPULATIONS ******/
+    char *pathname2 = (char*)malloc(sizeof(pathname));
+    strcpy(pathname2,pathname);
     char *tmp;
-    tmp=strtok(pathname,"/");
-    int ret_val=lookup(vfs_root_vn, tmp, strlen(tmp), res_vnode);
+    tmp = pathname2;
+    int i=0,count = 0;
+    int ret_val;
+    
+
+    while(tmp[i] != '\0')
+    {
+        if(tmp[i] == '/')
+            count++;
+        i++;
+    }
+    tmp = strtok(pathname,"/");
+    
+    if(pathname[0] == '/')
+        ret_val=lookup(vfs_root_vn, tmp, strlen(tmp), res_vnode);
+    else
+        ret_val=lookup(curproc->p_cwd, tmp, strlen(tmp), res_vnode);
+
     if(ret_val<0)
         return ret_val;
 
-    
-
-    while((tmp=strtok(NULL,"/"))!=NULL)
+    if(count<2)
     {
-        vnode_t temp_res_vnode=**res_vnode;
+        strcpy(*name,tmp);
+        *namelen=strlen(tmp);
+        return ret_val;
+    }
+
+   
+    vnode_t *temp_res_vnode=kmalloc(sizeof(vnode_t));
+
+    while(count-2 != 0)
+    {
+        tmp=strtok(NULL,"/");
+        temp_res_vnode=*res_vnode;
         ret_val=lookup(temp_res_vnode, tmp, strlen(tmp), res_vnode);
-    }    
-
-
-
-
+        if(ret_val<0)
+            return ret_val;
+        count--;
+    }
+    tmp=strtok(NULL,"/");
+    strcpy(*name,tmp);
+    *namelen=strlen(tmp);
+    return ret_val;
 }
 
 /* This returns in res_vnode the vnode requested by the other parameters.
