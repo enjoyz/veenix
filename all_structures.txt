@@ -1,0 +1,63 @@
+struct fs;
+struct dirent;
+struct stat;
+struct vnode;
+struct vmarea;
+
+typedef struct vnode_ops {
+        int (*read)(struct vnode *file, off_t offset, void *buf, size_t count);
+        int (*write)(struct vnode *file, off_t offset, const void *buf, size_t count);
+        int (*mmap)(struct vnode *file, struct vmarea *vma, struct mmobj **ret);
+        int (*create)(struct vnode *dir, const char *name,
+                      size_t name_len, struct vnode **result);
+        int (*mknod)(struct vnode *dir, const char *name, size_t name_len,
+                     int mode, devid_t devid);
+        int (*lookup)(struct vnode *dir, const char *name, size_t name_len,
+                      struct vnode **result);
+        int (*link)(struct vnode *oldvnode, struct vnode *dir,
+                    const char *name, size_t name_len);
+        int (*unlink)(struct vnode *dir, const char *name, size_t name_len);
+        int (*mkdir)(struct vnode *dir,  const char *name, size_t name_len);
+        int (*rmdir)(struct vnode *dir,  const char *name, size_t name_len);
+        int (*readdir)(struct vnode *dir, off_t offset, struct dirent *d);
+        int (*stat)(struct vnode *vnode, struct stat *buf);
+
+        int (*fillpage)(struct vnode *vnode, off_t offset, void *pagebuf);
+        int (*dirtypage)(struct vnode *vnode, off_t offset);
+        int (*cleanpage)(struct vnode *vnode, off_t offset, void *pagebuf);
+} vnode_ops_t;
+
+
+#define VN_BUSY        0x1
+
+typedef struct vnode {
+        struct vnode_ops   *vn_ops;
+        struct fs          *vn_fs;
+        struct mmobj       vn_mmobj;
+
+
+        ino_t              vn_vno;
+        int                vn_mode;
+        off_t              vn_len;
+        kmutex_t           vn_mutex;
+
+        void              *vn_i;
+
+        devid_t            vn_devid;
+
+        bytedev_t         *vn_cdev;
+        blockdev_t        *vn_bdev;
+
+        list_link_t        vn_link;        /* link on system vnode list */
+        int                vn_flags;       /* VN_BUSY */
+        ktqueue_t          vn_waitq;       /* queue of threads waiting for vnode
+                                              to become not busy */
+} vnode_t;
+
+struct vnode *vget(struct fs *fs, ino_t vnum);
+void vref(vnode_t *vn);
+void vput(vnode_t *vn);
+int vfs_is_in_use(struct fs *fs);
+void vnode_flush_all(struct fs *fs);
+int vnode_inuse(struct fs *fs);
+void vnode_print(struct fs *fs);
