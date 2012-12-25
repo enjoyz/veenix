@@ -28,10 +28,10 @@ lookup(vnode_t *dir, const char *name, size_t len, vnode_t **result)
        /* NOT_YET_IMPLEMENTED("VFS: lookup");
         return 0;*/
     int tmp;
-    if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) != -ENOENT)
+    if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) >= 0)
         return tmp;
+    return -ENOTDIR;
     
-        return -ENOTDIR;   
 
 }
 
