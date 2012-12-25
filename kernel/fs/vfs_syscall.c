@@ -41,8 +41,29 @@
 int
 do_read(int fd, void *buf, size_t nbytes)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_read");
-        return -1;
+        /*NOT_YET_IMPLEMENTED("VFS: do_read");
+        return -1;*/
+        
+        file_t *file_handler=fget(fd);
+        if(!file_handler)
+        {
+                return -EBADF;
+        }
+        if(file_handler->f_vnode->vn_mode== S_IFDIR)
+        {
+                fput(file_handler);
+                return -EISDIR;
+        }
+        int ret_val=file_handler->f_vnode->vn_ops->read(file_handler->f_vnode,file_handler->f_pos,buf,nbytes);
+        if(ret_val>=0)
+        {
+          file_handler->f_pos+=ret_val;
+        }
+
+        fput(file_handler);
+        return ret_val;
+
+
 }
 
 /* Very similar to do_read.  Check f_mode to be sure the file is writable.  If
@@ -56,8 +77,9 @@ do_read(int fd, void *buf, size_t nbytes)
 int
 do_write(int fd, const void *buf, size_t nbytes)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_write");
-        return -1;
+      /*  NOT_YET_IMPLEMENTED("VFS: do_write");
+        return -1;*/
+        
 }
 
 /*
