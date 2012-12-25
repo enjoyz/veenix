@@ -122,8 +122,26 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
 int
 open_namev(const char *pathname, int flag, vnode_t **res_vnode, vnode_t *base)
 {
-        NOT_YET_IMPLEMENTED("VFS: open_namev");
-        return 0;
+       /* NOT_YET_IMPLEMENTED("VFS: open_namev");
+        return 0;*/
+        char *Name;
+        int Path_Len = strlen(pathname);
+        int ret_val = dir_namev(pathname,&Path_Len,&Name, base, res_vnode);
+        if(ret_val < 0)
+            return ret_val;
+        ret_val = lookup(res_vnode,Name,strlen(Name),res_vnode);
+        int  creat_ret;
+        if(ret_val < 0 && flag == O_CREAT){
+            vnode_t *temp_res_vnode = kmalloc(sizeof(vnode_t));
+            temp_res_vnode = *res_vnode;
+            creat_ret=res_vnode->vn_ops->create(temp_res_vnode, Name,strlen(Name), res_vnode);
+        }
+        else if(ret_val > 0) 
+        {
+            vput(*res_vnode);
+            return ret_val;
+        }
+        return creat_ret;
 }
 
 #ifdef __GETCWD__
