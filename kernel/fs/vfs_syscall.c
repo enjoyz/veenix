@@ -79,7 +79,7 @@ do_write(int fd, const void *buf, size_t nbytes)
 {
       /*  NOT_YET_IMPLEMENTED("VFS: do_write");
         return -1;*/
-        
+
 }
 
 /*
@@ -115,8 +115,8 @@ do_close(int fd)
 int
 do_dup(int fd)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_dup");
-        return -1;
+       /* NOT_YET_IMPLEMENTED("VFS: do_dup");
+        return -1;*/
 }
 
 /* Same as do_dup, but insted of using get_empty_fd() to get the new fd,
