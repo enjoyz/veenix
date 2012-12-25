@@ -177,8 +177,19 @@ do_dup(int fd)
 int
 do_dup2(int ofd, int nfd)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_dup2");
-        return -1;
+        /*NOT_YET_IMPLEMENTED("VFS: do_dup2");
+        return -1;*/
+        file_t *file_handler=fget(fd);
+      if(!file_handler || nfd < 0 || nfd >= NFILES)
+      {
+              return -EBADF;
+      } 
+      if(curproc->p_files[nfd]!=NULL && nfd!=ofd)
+      {
+        do_close(nfd);
+      }
+      curproc->p_files[nfd]=file_handler;
+      return nfd;
 }
 
 /*
