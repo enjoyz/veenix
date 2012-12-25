@@ -170,8 +170,10 @@ idleproc_run(int arg1, void *arg2)
         /* Here you need to make the null, zero, and tty devices using mknod */
         /* You can't do this until you have VFS, check the include/drivers/dev.h
          * file for macros with the device ID's you will need to pass to mknod */
-        
-
+    
+          curproc->p_cwd=vfs_root_vn;
+          initthr->kt_proc->p_cwd=vfs_root_vn;
+          vref(curproc->p_cwd);
 #endif
 
         /* Finally, enable interrupts (we want to make sure interrupts
@@ -187,8 +189,7 @@ idleproc_run(int arg1, void *arg2)
 #ifdef __MTP__
         kthread_reapd_shutdown();
 #endif
-        panic("WORKIN!");
-
+ 
 #ifdef __VFS__
         /* Shutdown the vfs: */
         dbg_print("weenix: vfs shutdown...\n");
