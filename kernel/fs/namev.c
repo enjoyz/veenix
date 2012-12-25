@@ -93,17 +93,21 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
         return ret_val;
     }
 
-   
+    
     vnode_t *temp_res_vnode=kmalloc(sizeof(vnode_t));
 
-    while(count-2 != 0)
+    vput(res_vnode);
+    while(count-2 > 0)
     {
         tmp=strtok(NULL,"/");
         temp_res_vnode=*res_vnode;
+
         ret_val=lookup(temp_res_vnode, tmp, strlen(tmp), res_vnode);
         if(ret_val<0)
             return ret_val;
         count--;
+        if(count-2>0 )
+            vput(res_vnode);
     }
     tmp=strtok(NULL,"/");
     strcpy(*name,tmp);
