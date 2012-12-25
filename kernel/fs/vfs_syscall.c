@@ -195,6 +195,7 @@ do_mknod(const char *path, int mode, unsigned devid)
 {
         NOT_YET_IMPLEMENTED("VFS: do_mknod");
         return -1;
+
 }
 
 /* Use dir_namev() to find the vnode of the dir we want to make the new
