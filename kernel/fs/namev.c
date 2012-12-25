@@ -60,6 +60,28 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
 {
       /* NOT_YET_IMPLEMENTED("VFS: dir_namev");
         return 0;*/
+
+    /**** STRING MANIPULATIONS ******/
+    char *pathname2 = (char*)malloc(sizeof(pathname));
+    strcpy(pathname2,pathname);
+    char *tmp;
+    tmp = pathname2;
+    int i=0,count = 0;
+    while(tmp[i] != '\0')
+    {
+        if(tmp[i] == '/')
+            count++;
+        i++;
+    }
+    tmp = strtok(pathname,"/");
+    printf("%s\n",tmp);
+    while(count-2 != 0)
+    {
+        tmp=strtok(NULL,"/");
+        printf("%s\n",tmp);
+        count--;
+    }
+    tmp=strtok(NULL,"/");
 }
 
 /* This returns in res_vnode the vnode requested by the other parameters.
