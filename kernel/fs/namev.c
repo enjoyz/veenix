@@ -96,7 +96,7 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
     
     vnode_t *temp_res_vnode=kmalloc(sizeof(vnode_t));
 
-    vput(res_vnode);
+    vput(*res_vnode);
     while(count-2 > 0)
     {
         tmp=strtok(NULL,"/");
@@ -107,7 +107,7 @@ dir_namev(const char *pathname, size_t *namelen, const char **name,
             return ret_val;
         count--;
         if(count-2>0 )
-            vput(res_vnode);
+            vput(*res_vnode);
     }
     tmp=strtok(NULL,"/");
     strcpy(*name,tmp);
@@ -128,17 +128,17 @@ open_namev(const char *pathname, int flag, vnode_t **res_vnode, vnode_t *base)
 {
        /* NOT_YET_IMPLEMENTED("VFS: open_namev");
         return 0;*/
-        char *Name;
-        int Path_Len = strlen(pathname);
+        char *Name = (char *)kmalloc(sizeof(128));
+        size_t Path_Len;
         int ret_val = dir_namev(pathname,&Path_Len,&Name, base, res_vnode);
         if(ret_val < 0)
             return ret_val;
-        ret_val = lookup(res_vnode,Name,strlen(Name),res_vnode);
+        ret_val = lookup(*res_vnode,Name,strlen(Name),res_vnode);
         int  creat_ret;
         if(ret_val < 0 && flag == O_CREAT){
-            vnode_t *temp_res_vnode = kmalloc(sizeof(vnode_t));
+            vnode_t *temp_res_vnode = (vnode_t*) kmalloc(sizeof(vnode_t));
             temp_res_vnode = *res_vnode;
-            creat_ret=res_vnode->vn_ops->create(temp_res_vnode, Name,strlen(Name), res_vnode);
+            creat_ret=(*res_vnode)->vn_ops->create(temp_res_vnode, Name,strlen(Name), res_vnode);
         }
         else if(ret_val > 0) 
         {
