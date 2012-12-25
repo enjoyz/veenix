@@ -185,7 +185,7 @@ idleproc_run(int arg1, void *arg2)
 #ifdef __MTP__
         kthread_reapd_shutdown();
 #endif
-
+        panic("WORKIN!");
 
 #ifdef __VFS__
         /* Shutdown the vfs: */
