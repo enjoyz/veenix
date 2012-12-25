@@ -206,7 +206,7 @@ idleproc_run(int arg1, void *arg2)
         hard_shutdown();
         return NULL;
 }
-
+ some changes
 /**
  * This function, called by the idle process (within 'idleproc_run'), creates the
  * process commonly refered to as the "init" process, which should have PID 1.
@@ -385,7 +385,7 @@ initproc_run(int arg1, void *arg2)
       	kmutex_init(&mm1);
       
       	
-		proc_t* p1 = proc_create("Mutexfunc1");
+		    proc_t* p1 = proc_create("Mutexfunc1");
         kthread_t* k1 = kthread_create(p1, mynewfunc1, arg1, arg2);
         
        	proc_t* p2 = proc_create("Mutexfunc2");
