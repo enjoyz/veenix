@@ -30,9 +30,8 @@ lookup(vnode_t *dir, const char *name, size_t len, vnode_t **result)
     int tmp;
     if((tmp = (dir->vn_ops->lookup(dir,name,len,result))) != -ENOENT)
         return tmp;
-    else{
-        return -ENOTDIR;
-    }
+    
+        return -ENOTDIR;   
 
 }
 
