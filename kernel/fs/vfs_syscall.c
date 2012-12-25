@@ -79,6 +79,7 @@ do_write(int fd, const void *buf, size_t nbytes)
 {
       /*  NOT_YET_IMPLEMENTED("VFS: do_write");
         return -1;*/
+
       file_t *file_handler=fget(fd);
       if(!file_handler)
       {
@@ -145,8 +146,23 @@ do_close(int fd)
 int
 do_dup(int fd)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_dup");
-        return -1;
+       /* NOT_YET_IMPLEMENTED("VFS: do_dup");
+        return -1;*/
+      file_t *file_handler=fget(fd);
+      if(!file_handler)
+      {
+              return -EBADF;
+      } 
+      int empty_fd=get_empty_fd(curproc);
+      if(empty_fd==-EMFILE)
+      {
+        fput(file_handler);
+        return empty_fd;
+      }
+      curproc->p_files[empty_fd]=file_handler;
+      return empty_fd;
+
+
 }
 
 /* Same as do_dup, but insted of using get_empty_fd() to get the new fd,
@@ -161,8 +177,19 @@ do_dup(int fd)
 int
 do_dup2(int ofd, int nfd)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_dup2");
-        return -1;
+        /*NOT_YET_IMPLEMENTED("VFS: do_dup2");
+        return -1;*/
+        file_t *file_handler=fget(fd);
+      if(!file_handler || nfd < 0 || nfd >= NFILES)
+      {
+              return -EBADF;
+      } 
+      if(curproc->p_files[nfd]!=NULL && nfd!=ofd)
+      {
+        do_close(nfd);
+      }
+      curproc->p_files[nfd]=file_handler;
+      return nfd;
 }
 
 /*
