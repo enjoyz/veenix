@@ -80,6 +80,27 @@ do_write(int fd, const void *buf, size_t nbytes)
       /*  NOT_YET_IMPLEMENTED("VFS: do_write");
         return -1;*/
 
+      file_t *file_handler=fget(fd);
+      if(!file_handler)
+      {
+              return -EBADF;
+      } 
+      if(file_handler->f_vnode->vn_mode== S_IFDIR)
+      {
+              fput(file_handler);
+              return -EISDIR;
+      }
+      if(file_handler->f_mode == FMODE_APPEND)
+      {
+              int ret_val = do_lseek(fd,file_handler->f_pos,SEEK_END);
+              if(ret_val < 0){
+                fput(file_handler);
+                return ret_val;    
+              }
+      }
+      int ret_val=file_handler->f_vnode->vn_ops->write(file_handler->f_vnode, file_handler->f_pos, buf, nbytes);
+      fput(file_handler);
+      return ret_val;
 }
 
 /*
@@ -92,8 +113,18 @@ do_write(int fd, const void *buf, size_t nbytes)
 int
 do_close(int fd)
 {
-        NOT_YET_IMPLEMENTED("VFS: do_close");
-        return -1;
+        /*NOT_YET_IMPLEMENTED("VFS: do_close");
+        return -1;*/
+        file_t *file_handler = fget(fd);
+        if(file_handler){
+                curproc->p_files[fd] = NULL;
+                fput(file_handler);
+                fput(file_handler);
+        }
+        else{
+                return -EBADF;
+        }
+        return 0;
 }
 
 /* To dup a file:
@@ -117,6 +148,21 @@ do_dup(int fd)
 {
        /* NOT_YET_IMPLEMENTED("VFS: do_dup");
         return -1;*/
+      file_t *file_handler=fget(fd);
+      if(!file_handler)
+      {
+              return -EBADF;
+      } 
+      int empty_fd=get_empty_fd(curproc);
+      if(empty_fd==-EMFILE)
+      {
+        fput(file_handler);
+        return empty_fd;
+      }
+      curproc->p_files[empty_fd]=file_handler;
+      return empty_fd;
+
+
 }
 
 /* Same as do_dup, but insted of using get_empty_fd() to get the new fd,
